@@ -16,6 +16,12 @@ window.addEventListener('resize', function() {
   canvas.height = innerHeight;
 });
 
+document.addEventListener('DOMContentLoaded', function(e) {
+  mouse.x = e.x;
+  mouse.y = e.y;
+  console.log('document is ready. I can sleep now');
+});
+
 window.addEventListener('mousemove', function(e) {
   mouse.x = e.x;
   mouse.y = e.y;
@@ -23,17 +29,28 @@ window.addEventListener('mousemove', function(e) {
 
 window.addEventListener('click', function() {
   canvasColors.shift();
+  changesize();
   if (canvasColors.length === 0) {
     canvasColors = ['#8367C7', '#427AA1', "#B3001B"];
   }
 });
+
+function changesize() {
+  requestAnimationFrame(changesize);
+  //contextCanvas.clearRect(0, 0, innerWidth, innerHeight);
+  //contextCanvas.beginPath();
+  //contextCanvas.arc(mouse.x, mouse.y, 20, 0, Math.PI * 2, false);
+  contextCanvas.lineWidth = 15;
+  //contextCanvas.strokeStyle = canvasColors[0];    
+  contextCanvas.stroke();
+}
 
 function animate() {
   requestAnimationFrame(animate);
   contextCanvas.clearRect(0, 0, innerWidth, innerHeight);
   contextCanvas.beginPath();
   contextCanvas.arc(mouse.x, mouse.y, 20, 0, Math.PI * 2, false);
-  contextCanvas.lineWidth = 15;
+  contextCanvas.lineWidth = 150;
   contextCanvas.strokeStyle = canvasColors[0];    
   contextCanvas.stroke();
 }
