@@ -61,7 +61,10 @@ window.addEventListener('mousemove', function(e) {
   }
 });
 
+let voice = [261.63, 291.63, 200];
+
 window.addEventListener('click', function() {
+  var rand = voice[Math.floor(Math.random() * voice.length)];
   //draw new function
   contextCanvas.lineWidth = 1;
   console.log(contextCanvas.lineWidth)
@@ -69,7 +72,7 @@ window.addEventListener('click', function() {
   let context = new (window.AudioContext || window.webkitAudioContext)();
   let note = new Sound(context);
   let now = context.currentTime;
-  note.play(261.63, now);
+  note.play(rand, now);
 });
 
 function changesize() {
