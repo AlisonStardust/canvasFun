@@ -1,30 +1,43 @@
 const canvas = document.querySelector('.canvas');
 const contextCanvas = canvas.getContext('2d');
 let canvasColors = ['#8367C7', '#427AA1', '#70A0AF', '#A0C1B9']
-contextCanvas.lineWidth = 150;
-
-var context = new (window.AudioContext || window.webkitAudioContext)();
-
-var oscillator = context.createOscillator();
-
-oscillator.type = 'sine';
-oscillator.frequency.value = 190;
-oscillator.connect(context.destination);
-  oscillator.start();
-  oscillator.stop(1);
-  oscillator.frequency.value += 100;
-// var now = context.currentTime;
-// oscillator.play(now + 1);
-// oscillator.stop(now + 3);
 
 const mouse = {
   x: innerWidth,
   y: innerHeight
 };
 
+//class sound taken from css tricks: https://css-tricks.com/introduction-web-audio-api/
+class Sound {
+
+  constructor(context) {
+    this.context = context;
+  }
+
+  init() {
+    this.oscillator = this.context.createOscillator();
+    this.gainNode = this.context.createGain();
+    this.oscillator.connect(this.gainNode);
+    this.gainNode.connect(this.context.destination);
+    this.oscillator.type = 'sine';
+  }
+
+  play(value, time) {
+    this.init();
+    this.oscillator.frequency.value = value;
+    this.gainNode.gain.setValueAtTime(1, this.context.currentTime);
+    this.oscillator.start(time);
+    this.stop(time);
+  }
+
+  stop(time) {
+    this.gainNode.gain.exponentialRampToValueAtTime(0.001, time + 1);
+    this.oscillator.stop(time + 1);
+  }
+}
+
 canvas.width = innerWidth;
 canvas.height = innerHeight;
-
 
 //event listeners on all canvas
 window.addEventListener('resize', function() {
@@ -42,33 +55,40 @@ document.addEventListener('DOMContentLoaded', function(e) {
 window.addEventListener('mousemove', function(e) {
   mouse.x = e.x;
   mouse.y = e.y;
+  changesize();
+  if (canvasColors.length === 0) {
+    canvasColors = ['#8367C7', '#427AA1', '#70A0AF', '#A0C1B9'];
+  }
 });
 
 window.addEventListener('click', function() {
-  // oscillator.start();
-  // oscillator.stop(1);
-  // oscillator.frequency.value += 100;
+  //draw new function
+  contextCanvas.lineWidth = 1;
   console.log(contextCanvas.lineWidth)
-  //canvasColors.shift();
-  changesize();
+  //sound effects on click
+  let context = new (window.AudioContext || window.webkitAudioContext)();
+  let note = new Sound(context);
+  let now = context.currentTime;
+  note.play(261.63, now);
 });
 
 function changesize() {
-  requestAnimationFrame(changesize);
-  contextCanvas.lineWidth += 1;
-  if (contextCanvas.lineWidth >= 700) {
-    contextCanvas.lineWidth = 15;
+  if (contextCanvas.lineWidth > 600) {
+    contextCanvas.lineWidth = 1;
+  } else {
+    console.log(contextCanvas.lineWidth);
   }
-  contextCanvas.stroke();
 }
 
 function animate() {
   requestAnimationFrame(animate);
   contextCanvas.clearRect(0, 0, innerWidth, innerHeight);
   contextCanvas.beginPath();
+  contextCanvas.lineWidth += 1;
   contextCanvas.arc(mouse.x, mouse.y, 20, 0, Math.PI * 2, false);
   contextCanvas.strokeStyle = canvasColors[0];    
   contextCanvas.stroke();
 }
 
+changesize();
 animate();
