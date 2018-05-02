@@ -1,6 +1,7 @@
 const canvas = document.querySelector('.canvas');
 const contextCanvas = canvas.getContext('2d');
-let canvasColors = ['#8367C7', '#427AA1', '#70A0AF', '#A0C1B9']
+let canvasColors = ['#8367C7', '#427AA1', '#70A0AF', '#A0C1B9'];
+let voice = [261.63, 291.63, 200, 300, 500, 230, 190, 600];
 
 const mouse = {
   x: innerWidth,
@@ -61,11 +62,10 @@ window.addEventListener('mousemove', function(e) {
   }
 });
 
-let voice = [261.63, 291.63, 200];
-
 window.addEventListener('click', function() {
-  var rand = voice[Math.floor(Math.random() * voice.length)];
-  //draw new function
+  let rand = voice[Math.floor(Math.random() * voice.length)];
+  //draw new circle function
+  changesize();
   contextCanvas.lineWidth = 1;
   console.log(contextCanvas.lineWidth)
   //sound effects on click
@@ -75,6 +75,7 @@ window.addEventListener('click', function() {
   note.play(rand, now);
 });
 
+//circles drawing functions
 function changesize() {
   if (contextCanvas.lineWidth > 600) {
     contextCanvas.lineWidth = 1;
