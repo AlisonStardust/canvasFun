@@ -59,7 +59,7 @@ document.addEventListener('DOMContentLoaded', function(e) {
 window.addEventListener('mousemove', function(e) {
   mouse.x = e.x;
   mouse.y = e.y;
-  //changesize();
+  changesize();
   if (canvasColors.length === 0) {
     canvasColors = ['#8367C7', '#427AA1', '#70A0AF', '#A0C1B9'];
   }
@@ -117,8 +117,6 @@ var circles = [];
 
 //circles drawing functions
 function changesize() {
-  mouse.x = 100;
-  mouse.y = 100;
   if (contextCanvas.lineWidth > 600) {
     contextCanvas.lineWidth = 1;
   } else {
@@ -162,5 +160,5 @@ function animate2() {
 }
 
 //main functions starter
-//changesize();
+changesize();
 animate();
